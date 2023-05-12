@@ -4,4 +4,4 @@
 
 ## Other code changes
 
-* no changes
+* Update package fetching for R6 tgz packages.
