@@ -89,6 +89,10 @@
             <artifactId>xpp3_xpath</artifactId>
         </dependency>
 
+        <dependency>
+        <groupId>com.nimbusds</groupId>
+        <artifactId>nimbus-jose-jwt</artifactId>
+        </dependency>
         <!-- JSON Utilities -->
         <dependency>
             <groupId>com.google.code.gson</groupId>

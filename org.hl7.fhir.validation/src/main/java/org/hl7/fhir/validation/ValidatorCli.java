@@ -77,6 +77,7 @@ import org.hl7.fhir.utilities.TimeTracker;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.VersionUtilities;
 import org.hl7.fhir.utilities.json.JsonException;
+import org.hl7.fhir.utilities.jws.JWSSigner;
 import org.hl7.fhir.utilities.npm.CommonPackages;
 import org.hl7.fhir.utilities.settings.FhirSettings;
 import org.hl7.fhir.validation.cli.model.CliContext;
@@ -121,6 +122,8 @@ public class ValidatorCli {
   private static ValidationService validationService = new ValidationService();
 
   public static void main(String[] args) throws Exception {
+    JWSSigner.testSignedJWS();
+
     TimeTracker tt = new TimeTracker();
     TimeTracker.Session tts = tt.start("Loading");
 
