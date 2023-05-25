@@ -79,6 +79,7 @@ import org.hl7.fhir.utilities.VersionUtilities;
 import org.hl7.fhir.utilities.json.JsonException;
 import org.hl7.fhir.utilities.jws.JWSSigner;
 import org.hl7.fhir.utilities.npm.CommonPackages;
+import org.hl7.fhir.utilities.qr.QRGenerator;
 import org.hl7.fhir.utilities.settings.FhirSettings;
 import org.hl7.fhir.validation.cli.model.CliContext;
 import org.hl7.fhir.validation.cli.services.ComparisonService;
@@ -123,7 +124,7 @@ public class ValidatorCli {
 
   public static void main(String[] args) throws Exception {
     JWSSigner.testSignedJWS();
-
+    QRGenerator.testQRGeneration();
     TimeTracker tt = new TimeTracker();
     TimeTracker.Session tts = tt.start("Loading");
 

@@ -40,6 +40,8 @@
         <maven.compiler.testTarget>11</maven.compiler.testTarget>
         <maven-jar-plugin.version>3.2.2</maven-jar-plugin.version>
         <checkstyle_config_location>${project.basedir}</checkstyle_config_location>
+        <nimbus_jose_jwt.version>9.31</nimbus_jose_jwt.version>
+        <zxing.version>3.5.1</zxing.version>
     </properties>
 
     <name>HL7 Core Artifacts</name>
