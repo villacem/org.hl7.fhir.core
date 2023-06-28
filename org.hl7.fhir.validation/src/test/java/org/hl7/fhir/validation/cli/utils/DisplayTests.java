@@ -14,8 +14,8 @@ public class DisplayTests {
 
 
   final static String[][] PLACEHOLDERS = {
-    { "XML_AND_JSON_FHIR_VERSIONS", "1.0, 1.4, 3.0, 4.0, " + Constants.VERSION_MM },
-    { "TURTLE_FHIR_VERSIONS", "3.0, 4.0, " + Constants.VERSION_MM },
+    { "XML_AND_JSON_FHIR_VERSIONS", "1.0, 1.4, 3.0, 4.0, 5.0" },
+    { "TURTLE_FHIR_VERSIONS", "3.0, 4.0, 5.0" },
   };
   @Test
   @DisplayName("Check for placeholder replacement in help output")
