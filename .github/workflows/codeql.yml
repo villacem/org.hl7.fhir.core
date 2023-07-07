@@ -65,7 +65,7 @@ jobs:
     #   modify them (or add more) to build your code if your project, please refer to the EXAMPLE below for guidance.
 
     - run: |
-        mvn install -DskipTests -pl ${{ matrix.module }}
+        mvn clean package -Dfindbugs.skip -Dcheckstyle.skip -Dpmd.skip=true -Dspotbugs.skip -Denforcer.skip -Dmaven.javadoc.skip -DskipTests -Dmaven.test.skip.exec -Dlicense.skip=true -Drat.skip=true -pl ${{ matrix.module }}
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
