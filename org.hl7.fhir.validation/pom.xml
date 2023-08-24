@@ -82,8 +82,12 @@
             <artifactId>Saxon-HE</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.ogce</groupId>
+            <groupId>xpp3</groupId>
             <artifactId>xpp3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>xpp3</groupId>
+            <artifactId>xpp3_xpath</artifactId>
         </dependency>
 
         <!-- JSON Utilities -->

@@ -84,11 +84,15 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.ogce</groupId>
+            <groupId>xpp3</groupId>
             <artifactId>xpp3</artifactId>
             <optional>true</optional>
         </dependency>
-
+        <dependency>
+            <groupId>xpp3</groupId>
+            <artifactId>xpp3_xpath</artifactId>
+            <optional>true</optional>
+        </dependency>
 
         <dependency>
             <groupId>com.ibm.icu</groupId>
