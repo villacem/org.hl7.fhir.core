@@ -51,7 +51,6 @@ import org.hl7.fhir.r5.conformance.ElementRedirection;
 import org.hl7.fhir.r5.conformance.profile.ProfileUtilities.AllowUnknownProfile;
 import org.hl7.fhir.r5.conformance.profile.ProfileUtilities.ElementDefinitionCounter;
 import org.hl7.fhir.r5.context.IWorkerContext;
-import org.hl7.fhir.r5.context.IWorkerContext.ValidationResult;
 import org.hl7.fhir.r5.elementmodel.ObjectConverter;
 import org.hl7.fhir.r5.elementmodel.Property;
 import org.hl7.fhir.r5.model.Base;
@@ -2292,17 +2291,13 @@ public class ProfileUtilities extends TranslatingUtilities {
     }
     // Before applying changes, apply them to what's in the profile
     StructureDefinition profile = null;
-    boolean msg = true;
     if (base.hasSliceName()) {
       profile = base.getType().size() == 1 && base.getTypeFirstRep().hasProfile() ? context.fetchResource(StructureDefinition.class, base.getTypeFirstRep().getProfile().get(0).getValue(), srcSD) : null;
     }
     if (profile==null) {
       profile = source.getType().size() == 1 && source.getTypeFirstRep().hasProfile() ? context.fetchResource(StructureDefinition.class, source.getTypeFirstRep().getProfile().get(0).getValue(), derivedSrc) : null;
-      if (profile != null && !"Extension".equals(profile.getType()) && profile.getKind() != StructureDefinitionKind.RESOURCE && profile.getKind() != StructureDefinitionKind.LOGICAL) {
-        // this is a problem - we're kind of hacking things here. The problem is that we sometimes want the details from the profile to override the 
-        // inherited attributes, and sometimes not
+      if (profile != null && !"Extension".equals(profile.getType()) && profile.getKind() != StructureDefinitionKind.RESOURCE && profile.getKind() != StructureDefinitionKind.LOGICAL && profile.getKind() != StructureDefinitionKind.COMPLEXTYPE) {
         profile = null;
-        msg = false;
       }
     }
     if (profile != null) {
@@ -2324,17 +2319,15 @@ public class ProfileUtilities extends TranslatingUtilities {
     } else if (source.getType().size() == 1 && source.getTypeFirstRep().hasProfile() && !source.getTypeFirstRep().getProfile().get(0).hasExtension(ToolingExtensions.EXT_PROFILE_ELEMENT)) {
       // todo: should we change down the profile_element if there's one?
       String type = source.getTypeFirstRep().getWorkingCode();
-      if (msg) {
-        if ("Extension".equals(type)) {
-          System.out.println("Can't find Extension definition for "+source.getTypeFirstRep().getProfile().get(0).asStringValue()+" but trying to go on");          
-          if (allowUnknownProfile != AllowUnknownProfile.ALL_TYPES) {
-            throw new DefinitionException("Unable to find Extension definition for "+source.getTypeFirstRep().getProfile().get(0).asStringValue());          
-          }
-        } else {
-          System.out.println("Can't find "+type+" profile "+source.getTypeFirstRep().getProfile().get(0).asStringValue()+" but trying to go on");          
-          if (allowUnknownProfile == AllowUnknownProfile.NONE) {
-            throw new DefinitionException("Unable to find "+type+" profile "+source.getTypeFirstRep().getProfile().get(0).asStringValue());          
-          }
+      if ("Extension".equals(type)) {
+        System.out.println("Can't find Extension definition for "+source.getTypeFirstRep().getProfile().get(0).asStringValue()+" but trying to go on");          
+        if (allowUnknownProfile != AllowUnknownProfile.ALL_TYPES) {
+          throw new DefinitionException("Unable to find Extension definition for "+source.getTypeFirstRep().getProfile().get(0).asStringValue());          
+        }
+      } else {
+        System.out.println("Can't find "+type+" profile "+source.getTypeFirstRep().getProfile().get(0).asStringValue()+" but trying to go on");          
+        if (allowUnknownProfile == AllowUnknownProfile.NONE) {
+          throw new DefinitionException("Unable to find "+type+" profile "+source.getTypeFirstRep().getProfile().get(0).asStringValue());          
         }
       }
     }
@@ -2606,23 +2599,9 @@ public class ProfileUtilities extends TranslatingUtilities {
                 messages.add(new ValidationMessage(Source.ProfileValidator, ValidationMessage.IssueType.BUSINESSRULE, pn+"."+base.getPath(), "Binding "+base.getBinding().getValueSet()+" could not be expanded", ValidationMessage.IssueSeverity.WARNING));
               else if (expDerived.getValueset() == null)
                 messages.add(new ValidationMessage(Source.ProfileValidator, ValidationMessage.IssueType.BUSINESSRULE, pn+"."+derived.getPath(), "Binding "+derived.getBinding().getValueSet()+" could not be expanded", ValidationMessage.IssueSeverity.WARNING));
-              else if (ToolingExtensions.hasExtension(expBase.getValueset().getExpansion(), ToolingExtensions.EXT_EXP_TOOCOSTLY)) {
-                if (ToolingExtensions.hasExtension(expDerived.getValueset().getExpansion(), ToolingExtensions.EXT_EXP_TOOCOSTLY) || expDerived.getValueset().getExpansion().getContains().size() > 100) {
-                  messages.add(new ValidationMessage(Source.ProfileValidator, ValidationMessage.IssueType.BUSINESSRULE, pn+"."+derived.getPath(), "Unable to check if "+derived.getBinding().getValueSet()+" is a proper subset of " +base.getBinding().getValueSet()+" - base value set is too large to check", ValidationMessage.IssueSeverity.WARNING));
-                } else {
-                  boolean ok = true;
-                  for (ValueSetExpansionContainsComponent cc : expDerived.getValueset().getExpansion().getContains()) {
-                    ValidationResult vr = context.validateCode(null, cc.getSystem(), cc.getVersion(), cc.getCode(), null, baseVs);
-                    if (!vr.isOk()) {
-                      ok = false;
-                      break;                      
-                    }
-                  }
-                  if (!ok) {
-                    messages.add(new ValidationMessage(Source.ProfileValidator, ValidationMessage.IssueType.BUSINESSRULE, pn+"."+derived.getPath(), "Binding "+derived.getBinding().getValueSet()+" is not a subset of binding "+base.getBinding().getValueSet(), ValidationMessage.IssueSeverity.ERROR));
-                  }
-                }
-              } else if (!isSubset(expBase.getValueset(), expDerived.getValueset()))
+              else if (ToolingExtensions.hasExtension(expBase.getValueset().getExpansion(), ToolingExtensions.EXT_EXP_TOOCOSTLY))
+                messages.add(new ValidationMessage(Source.ProfileValidator, ValidationMessage.IssueType.BUSINESSRULE, pn+"."+derived.getPath(), "Unable to check if "+derived.getBinding().getValueSet()+" is a proper subset of " +base.getBinding().getValueSet()+" - base value set is too large to check", ValidationMessage.IssueSeverity.WARNING));
+              else if (!isSubset(expBase.getValueset(), expDerived.getValueset()))
                 messages.add(new ValidationMessage(Source.ProfileValidator, ValidationMessage.IssueType.BUSINESSRULE, pn+"."+derived.getPath(), "Binding "+derived.getBinding().getValueSet()+" is not a subset of binding "+base.getBinding().getValueSet(), ValidationMessage.IssueSeverity.ERROR));
             }
           }

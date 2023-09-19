@@ -739,7 +739,7 @@ public class ValueSetExpander extends ValueSetProcessBase {
       copyImportContains(base.getExpansion().getContains(), null, expParams, imports, noInactive, base.getExpansion().getProperty(), base);
     } else {
       CodeSystem cs = context.fetchSupplementedCodeSystem(inc.getSystem());
-      if (ValueSetUtilities.isServerSide(inc.getSystem()) || (cs == null || (cs.getContent() != CodeSystemContentMode.COMPLETE && cs.getContent() != CodeSystemContentMode.FRAGMENT))) {
+      if (ValueSetUtilities.isServerSide(inc.getSystem()) || (cs == null || (cs.getContent() != CodeSystemContentMode.COMPLETE && cs.getContent() != CodeSystemContentMode.FRAGMENT && cs.getContent() != CodeSystemContentMode.EXAMPLE ))) {
         doServerIncludeCodes(inc, heirarchical, exp, imports, expParams, extensions, noInactive, valueSet.getExpansion().getProperty());
       } else {
         if (cs.hasUserData("supplements.installed")) {
@@ -796,7 +796,7 @@ public class ValueSetExpander extends ValueSetProcessBase {
         throw failTSE("Unable to find code system " + inc.getSystem().toString());
     }
     cs.checkNoModifiers("Code System", "expanding");
-    if (cs.getContent() != CodeSystemContentMode.COMPLETE && cs.getContent() != CodeSystemContentMode.FRAGMENT)
+    if (cs.getContent() != CodeSystemContentMode.COMPLETE && cs.getContent() != CodeSystemContentMode.FRAGMENT && cs.getContent() != CodeSystemContentMode.EXAMPLE)
       throw failTSE("Code system " + inc.getSystem().toString() + " is incomplete");
     if (cs.hasVersion() || REPORT_VERSION_ANYWAY) {
       UriType u = new UriType(cs.getUrl() + (cs.hasVersion() ? "|"+cs.getVersion() : ""));

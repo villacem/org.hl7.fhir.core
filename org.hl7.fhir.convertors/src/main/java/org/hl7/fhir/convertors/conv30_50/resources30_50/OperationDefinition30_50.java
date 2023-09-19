@@ -5,6 +5,7 @@ import org.hl7.fhir.convertors.context.ConversionContext30_50;
 import org.hl7.fhir.convertors.conv30_50.datatypes30_50.ContactDetail30_50;
 import org.hl7.fhir.convertors.conv30_50.datatypes30_50.Reference30_50;
 import org.hl7.fhir.convertors.conv30_50.datatypes30_50.UsageContext30_50;
+import org.hl7.fhir.convertors.conv30_50.datatypes30_50.Utilities30_50;
 import org.hl7.fhir.convertors.conv30_50.datatypes30_50.complextypes30_50.CodeableConcept30_50;
 import org.hl7.fhir.convertors.conv30_50.datatypes30_50.primitivetypes30_50.Boolean30_50;
 import org.hl7.fhir.convertors.conv30_50.datatypes30_50.primitivetypes30_50.Code30_50;
@@ -201,8 +202,9 @@ public class OperationDefinition30_50 {
       tgt.setMaxElement(String30_50.convertString(src.getMaxElement()));
     if (src.hasDocumentation())
       tgt.setDocumentationElement(String30_50.convertStringToMarkdown(src.getDocumentationElement()));
-    if (src.hasType())
-      tgt.setType(Enumerations.FHIRTypes.fromCode(src.getType()));
+    if (src.hasType()) {
+      Utilities30_50.convertType(src.getTypeElement(), tgt.getTypeElement());      
+    }
     if (src.hasSearchType())
       tgt.setSearchTypeElement(Enumerations30_50.convertSearchParamType(src.getSearchTypeElement()));
     if (src.hasProfile())
@@ -229,8 +231,9 @@ public class OperationDefinition30_50 {
       tgt.setMaxElement(String30_50.convertString(src.getMaxElement()));
     if (src.hasDocumentation())
       tgt.setDocumentationElement(String30_50.convertString(src.getDocumentationElement()));
-    if (src.hasType())
-      tgt.setType(src.getType().toCode());
+    if (src.hasType()) {
+      Utilities30_50.convertType(src.getTypeElement(), tgt.getTypeElement());     
+    }
     if (src.hasSearchType())
       tgt.setSearchTypeElement(Enumerations30_50.convertSearchParamType(src.getSearchTypeElement()));
     for (org.hl7.fhir.r5.model.UriType t : src.getTargetProfile())

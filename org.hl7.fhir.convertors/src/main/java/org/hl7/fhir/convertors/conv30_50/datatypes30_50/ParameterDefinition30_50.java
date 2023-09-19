@@ -16,7 +16,9 @@ public class ParameterDefinition30_50 {
     if (src.hasMin()) tgt.setMinElement(Integer30_50.convertInteger(src.getMinElement()));
     if (src.hasMax()) tgt.setMaxElement(String30_50.convertString(src.getMaxElement()));
     if (src.hasDocumentation()) tgt.setDocumentationElement(String30_50.convertString(src.getDocumentationElement()));
-    if (src.hasType()) tgt.setType(org.hl7.fhir.r5.model.Enumerations.FHIRTypes.fromCode(src.getType()));
+    if (src.hasType()) {
+        Utilities30_50.convertType(src.getTypeElement(), tgt.getTypeElement());
+    }
     if (src.hasProfile()) {
       tgt.setProfile(Reference30_50.convertReference(src.getProfile()).getReference());
     }
@@ -32,7 +34,9 @@ public class ParameterDefinition30_50 {
     if (src.hasMin()) tgt.setMinElement(Integer30_50.convertInteger(src.getMinElement()));
     if (src.hasMax()) tgt.setMaxElement(String30_50.convertString(src.getMaxElement()));
     if (src.hasDocumentation()) tgt.setDocumentationElement(String30_50.convertString(src.getDocumentationElement()));
-    if (src.hasType()) tgt.setType(src.getType().toCode());
+    if (src.hasType()) {
+        Utilities30_50.convertType(src.getTypeElement(), tgt.getTypeElement());
+    }
     if (src.hasProfile()) tgt.setProfile(new org.hl7.fhir.dstu3.model.Reference(src.getProfile()));
     return tgt;
   }
